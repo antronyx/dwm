@@ -1,5 +1,8 @@
 /* See LICENSE file for copyright and license details. */
 
+
+#define XLuxUp 0x1008FF02
+#define XLuxDown 0x1008FF03
 #define XVolUp 0x1008FF13 
 #define	XVolDown 0x1008FF11
 #define XVolMute 0x1008FF12
@@ -11,8 +14,8 @@ static const unsigned int borderpx  = 1;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
-static const char *fonts[]          = { "dejavusans:size=12" };
-static const char dmenufont[]       = "dejavusans:size=11";
+static const char *fonts[]          = { "sans:size=12" };
+static const char dmenufont[]       = "sans:size=11";
 static const char col_gray1[]       = "#222222";
 static const char col_gray2[]       = "#444444";
 static const char col_gray3[]       = "#bbbbbb";
@@ -39,11 +42,13 @@ static const Rule rules[] = {
 	{ "Firefox",  NULL,       NULL,       1 << 8,       0,           -1 },
 };
 
-/* Definition for alsa command actions (Volume Control) */
+/* Definition for alsa command actions (Volume Control) and Display Brightness*/
 static const char *upvol[]   = { "/usr/bin/pactl", "set-sink-volume", "0", "+5%",     NULL };
 static const char *downvol[] = { "/usr/bin/pactl", "set-sink-volume", "0", "-5%",     NULL };
 static const char *mutevol[] = { "/usr/bin/pactl", "set-sink-mute",   "0", "toggle",  NULL };
 
+static const char *brupcmd[] = { "sudo", "xbacklight", "-inc", "10", NULL };
+static const char *brdowncmd[] = { "sudo", "xbacklight", "-dec", "10", NULL };
 
 
 /* layout(s) */
@@ -76,7 +81,7 @@ static const Layout layouts[] = {
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
-static const char *termcmd[]  = { "st", NULL };
+static const char *termcmd[]  = { "gnome-terminal", NULL };
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
@@ -108,6 +113,8 @@ static Key keys[] = {
 	{ 0,                       	XVolDown,  spawn,	   {.v = downvol } },
 	{ 0,                       	XVolMute,  spawn, 	   {.v = mutevol } },
 	{ 0,                       	XVolUp,    spawn, 	   {.v = upvol   } },
+	{ 0, 				XLuxUp,	   spawn, 	   {.v = brupcmd} },
+	{ 0, 				XLuxDown,  spawn, 	   {.v = brdowncmd} },
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
