@@ -6,7 +6,9 @@
 #define XVolUp 0x1008FF13 
 #define	XVolDown 0x1008FF11
 #define XVolMute 0x1008FF12
+#define XPrtSc 0x0000ff61 
 
+//#define WinKey 0xffeb
 
 /* appearance */
 
@@ -27,6 +29,7 @@ static const char *colors[][3]      = {
 	/*               fg         bg         border   */
 	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
 	[SchemeSel]  = { col_gray4, col_cyan,  col_red  },
+	
 };
 
 /* tagging */
@@ -50,6 +53,13 @@ static const char *mutevol[] = { "/usr/bin/pactl", "set-sink-mute",   "0", "togg
 static const char *brupcmd[] = { "sudo", "xbacklight", "-inc", "10", NULL };
 static const char *brdowncmd[] = { "sudo", "xbacklight", "-dec", "10", NULL };
 
+static const char *cmdPrtSc[]  = { "scrot", "-d3", "/home/$USER/Pictures/screenshots/%Y-%m-%d-%s_$wx$h.jpg", NULL };
+
+
+
+/*Programs bindings*/
+//Win + b -> Brave Browser
+static const char *execbrave[]={"brave", NULL};
 
 /* layout(s) */
 static const float mfact     = 0.55; /* factor of master area size [0.05..0.95] */
@@ -80,6 +90,7 @@ static const Layout layouts[] = {
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
+
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *termcmd[]  = { "gnome-terminal", NULL };
 
@@ -96,7 +107,7 @@ static Key keys[] = {
 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
 	{ MODKEY,                       XK_Return, zoom,           {0} },
 	{ MODKEY,                       XK_Tab,    view,           {0} },
-	{ MODKEY|ShiftMask,             XK_c,      killclient,     {0} },
+	{ MODKEY|ShiftMask,             XK_q,      killclient,     {0} },
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
@@ -110,11 +121,13 @@ static Key keys[] = {
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
+	{Mod4Mask,                      XK_b,      spawn,          {.v = execbrave } },	
 	{ 0,                       	XVolDown,  spawn,	   {.v = downvol } },
 	{ 0,                       	XVolMute,  spawn, 	   {.v = mutevol } },
 	{ 0,                       	XVolUp,    spawn, 	   {.v = upvol   } },
 	{ 0, 				XLuxUp,	   spawn, 	   {.v = brupcmd} },
 	{ 0, 				XLuxDown,  spawn, 	   {.v = brdowncmd} },
+	{ 0,				XPrtSc,	   spawn,          {.v = cmdPrtSc } },
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
@@ -124,7 +137,7 @@ static Key keys[] = {
 	TAGKEYS(                        XK_7,                      6)
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
-	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
+	{ MODKEY|ShiftMask,             XK_c,      quit,           {0} },
 	
 };
 
@@ -137,7 +150,6 @@ static Button buttons[] = {
 	{ ClkWinTitle,          0,              Button2,        zoom,           {0} },
 	{ ClkStatusText,        0,              Button2,        spawn,          {.v = termcmd } },
 	{ ClkClientWin,         MODKEY,         Button1,        movemouse,      {0} },
-	{ ClkClientWin,         MODKEY,         Button2,        togglefloating, {0} },
 	{ ClkClientWin,         MODKEY,         Button3,        resizemouse,    {0} },
 	{ ClkTagBar,            0,              Button1,        view,           {0} },
 	{ ClkTagBar,            0,              Button3,        toggleview,     {0} },
