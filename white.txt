@@ -1,0 +1,14 @@
+LICENSE
+Makefile
+README
+config.def.h
+config.mk
+dwm.1
+drw.h
+util.h
+drw.c
+dwm.c
+util.c
+dwm.png
+transient.c
+
